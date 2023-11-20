@@ -222,7 +222,8 @@ impl MouseConfig {
 pub struct Chart<Data> {
     transform: Transform,
     mouse: MouseConfig,
-    builder_cb: Option<Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data)>>,
+    builder_cb:
+        Option<Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data) + Send>>,
     data: Data,
 }
 
@@ -255,7 +256,7 @@ impl<Data> Chart<Data> {
     /// Set the builder callback.
     pub fn set_builder_cb(
         &mut self,
-        builder_cb: Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data)>,
+        builder_cb: Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data) + Send>,
     ) {
         self.builder_cb = Some(builder_cb)
     }
@@ -264,7 +265,7 @@ impl<Data> Chart<Data> {
     /// Set the builder callback. Consumes self.
     pub fn builder_cb(
         mut self,
-        builder_cb: Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data)>,
+        builder_cb: Box<dyn FnMut(&mut DrawingArea<EguiBackend, Shift>, &Transform, &Data) + Send>,
     ) -> Self {
         self.set_builder_cb(builder_cb);
 
